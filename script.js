@@ -15,7 +15,9 @@ const getCountries = function (country) {
 
   request.addEventListener('load', function () {
     const [data] = JSON.parse(this.responseText);
-    console.log(data.languages[0]);
+    console.log(data.borders[0]);
+    const [we, us] = data.borders[0];
+    console.log(we);
     console.log(data);
 
     const html = `
