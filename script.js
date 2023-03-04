@@ -116,6 +116,7 @@ btn.addEventListener('click', function () {
 // getCountries('japan');
 // geCountries('portugal');
 
+/*
 // coding challenge 1
 const whereAmI = function (lat, lng, country) {
   // using it to generate my own location
@@ -129,7 +130,6 @@ const whereAmI = function (lat, lng, country) {
   //     console.log('error');
   //   }
   // );
-  // // console.log(lats);
   fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
     .then(response => {
       console.log(response);
@@ -159,3 +159,4 @@ const whereAmI = function (lat, lng, country) {
     .finally(() => (countriesContainer.style.opacity = 1));
 };
 whereAmI(6.4474, 3.3903, 'nigeria');
+ */
