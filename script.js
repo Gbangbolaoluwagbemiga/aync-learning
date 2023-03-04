@@ -115,3 +115,47 @@ btn.addEventListener('click', function () {
 // getCountries('italy');
 // getCountries('japan');
 // geCountries('portugal');
+
+// coding challenge 1
+const whereAmI = function (lat, lng, country) {
+  // using it to generate my own location
+  // navigator.geolocation.getCurrentPosition(
+  //   function (pos) {
+  //     console.log(pos);
+  //     const { latitude, longitude } = pos.coords;
+  //     console.log(latitude, longitude);
+  //   },
+  //   function () {
+  //     console.log('error');
+  //   }
+  // );
+  // // console.log(lats);
+  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+    .then(response => {
+      console.log(response);
+      if (!response.ok)
+        throw new Error(`something went wrong, error ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log(data, `I'm in ${data.city} ${data.country}`);
+      return fetch(`https://restcountries.com/v2/name/${country}`);
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`country not found ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      displayCountries(data[0]);
+      console.log(data[0]);
+      const neighbors = data[0].borders;
+      if (!neighbors) throw new Error('country has no neighbors');
+
+      return fetch(`https://restcountries.com/v2/alpha/${neighbors[0]}`);
+    })
+    .then(res => res.json())
+    .then(data => displayCountries(data, 'neighbour'))
+    .catch(err => console.log(`${err.message}. Try again `))
+    .finally(() => (countriesContainer.style.opacity = 1));
+};
+whereAmI(6.4474, 3.3903, 'nigeria');
