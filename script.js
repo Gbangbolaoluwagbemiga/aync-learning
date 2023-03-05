@@ -160,3 +160,5 @@ const whereAmI = function (lat, lng, country) {
 };
 whereAmI(6.4474, 3.3903, 'nigeria');
  */
+
+const lil = 'hi';
