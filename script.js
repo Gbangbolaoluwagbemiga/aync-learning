@@ -178,9 +178,20 @@ lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
 ////////////////////////////////
 //Promsifying
-const promiser = new Promise(function (resolve) {
-  return resolve();
-});
-promiser.then(() => {
-  console.log(`i waited`);
-});
+
+const promiserFunc = sec => {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, sec * 1000);
+  });
+};
+promiserFunc(2)
+  .then(() => {
+    console.log(`i waited 2 sec`);
+    return promiserFunc(3);
+  })
+  .then(() => console.log('i waited 3 sec'));
+
+///////////////////
+// Direct promises
+Promise.resolve('How are you').then(x => console.log(x));
+Promise.reject(new Error('i am not good')).then(y => console.log(y));
