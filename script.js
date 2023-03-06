@@ -161,4 +161,26 @@ const whereAmI = function (lat, lng, country) {
 whereAmI(6.4474, 3.3903, 'nigeria');
  */
 
-const lil = 'hi';
+/////////////////////////////////
+//Handling promises
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('lottery is happening');
+  setTimeout(() => {
+    if (Math.random() >= 0.5) {
+      resolve(`you won🥂🏆`);
+    } else {
+      reject(new Error(`you loss😢`));
+    }
+  }, 2000);
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+////////////////////////////////
+//Promsifying
+const promiser = new Promise(function (resolve) {
+  return resolve();
+});
+promiser.then(() => {
+  console.log(`i waited`);
+});
