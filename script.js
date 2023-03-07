@@ -245,8 +245,12 @@ const checkCurrentLocation = function () {
   // btn.addEventListener('click', checkCurrentLocation);
   
   */
-
+////////////////////
+// praticing creation of html element from scratch using js(coding challenge 2)
 // const createImgEl = document.createElement('p');
 // createImgEl.textContent = 'hi';
 // btn.append(createImgEl);
 // console.log(createImgEl);
+
+//////////////////////
+// Async await
