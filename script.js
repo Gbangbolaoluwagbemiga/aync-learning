@@ -108,9 +108,9 @@ const getCountries = function (country) {
     .finally(() => (countriesContainer.style.opacity = 1));
 };
 
-btn.addEventListener('click', function () {
-  getCountries('australia');
-});
+// btn.addEventListener('click', function () {
+//   getCountries('australia');
+// });
 // getCountries('queryuudcknjkl[p');
 // getCountries('italy');
 // getCountries('japan');
@@ -159,7 +159,6 @@ const whereAmI = function (lat, lng, country) {
     .finally(() => (countriesContainer.style.opacity = 1));
 };
 whereAmI(6.4474, 3.3903, 'nigeria');
- */
 
 /////////////////////////////////
 //Handling promises
@@ -185,13 +184,69 @@ const promiserFunc = sec => {
   });
 };
 promiserFunc(2)
-  .then(() => {
-    console.log(`i waited 2 sec`);
-    return promiserFunc(3);
-  })
-  .then(() => console.log('i waited 3 sec'));
+.then(() => {
+  console.log(`i waited 2 sec`);
+  return promiserFunc(3);
+})
+.then(() => console.log('i waited 3 sec'));
 
 ///////////////////
 // Direct promises
 Promise.resolve('How are you').then(x => console.log(x));
 Promise.reject(new Error('i am not good')).then(y => console.log(y));
+
+/////////////////////
+// Trying to promisify the geolocation api and modifying of coding challenge 1
+
+const checkCurrentLocation = function () {
+  const getCurrentPos = function () {
+    return new Promise(function (resolve, reject) {
+      navigator.geolocation.getCurrentPosition(
+        pos => console.log(pos),
+        err => console.log(err)
+        );
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+    };
+  getCurrentPos()
+  .then(res => {
+    const { latitude: lat, longitude: lng } = res.coords;
+    // console.log(latitude, longitude);
+    return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    })
+    .then(response => {
+      console.log(response);
+      if (!response.ok)
+      throw new Error(`something went wrong, error ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log(data, `I'm in ${data.city} ${data.country}`);
+      return fetch(`https://restcountries.com/v2/name/${data.country}`);
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`country not found ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      displayCountries(data[0]);
+      console.log(data[0]);
+      const neighbors = data[0].borders;
+      if (!neighbors) throw new Error('country has no neighbors');
+      
+      return fetch(`https://restcountries.com/v2/alpha/${neighbors[0]}`);
+    })
+    .then(res => res.json())
+    .then(data => displayCountries(data, 'neighbour'))
+    .catch(err => console.log(`${err.message}. Try again `))
+    .finally(() => (countriesContainer.style.opacity = 1));
+  };
+  checkCurrentLocation();
+  // btn.addEventListener('click', checkCurrentLocation);
+  
+  */
+
+// const createImgEl = document.createElement('p');
+// createImgEl.textContent = 'hi';
+// btn.append(createImgEl);
+// console.log(createImgEl);
