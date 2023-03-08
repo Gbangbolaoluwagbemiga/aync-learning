@@ -291,6 +291,8 @@ const whereAmI = async function () {
 
     const neighbor = await neighbourhood.json();
     displayCountries(neighbor, 'neighbour');
+
+    return `you're in ${data.city},${data.country}`;
   } catch (err) {
     console.error(err);
     catchError(`${err.message}🎇`);
@@ -299,4 +301,6 @@ const whereAmI = async function () {
   }
 };
 
+console.log(`1: will get location`);
 whereAmI();
+console.log(`finished getting location`);
