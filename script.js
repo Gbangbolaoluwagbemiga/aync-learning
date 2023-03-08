@@ -19,6 +19,7 @@ const displayCountries = (country, className = '') => {
        <p class="country__row"><span>💰</span>${country.currencies[0].name}</p>
     </div>
   </article>`;
+  countriesContainer.style.opacity = 1;
 
   countriesContainer.insertAdjacentHTML('beforeend', html);
 };
@@ -197,17 +198,19 @@ Promise.reject(new Error('i am not good')).then(y => console.log(y));
 
 /////////////////////
 // Trying to promisify the geolocation api and modifying of coding challenge 1
+*/
+const getCurrentPos = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(
+      pos => console.log(pos),
+      err => console.log(err)
+    );
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
 
-const checkCurrentLocation = function () {
-  const getCurrentPos = function () {
-    return new Promise(function (resolve, reject) {
-      navigator.geolocation.getCurrentPosition(
-        pos => console.log(pos),
-        err => console.log(err)
-        );
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-    };
+/*
+  const checkCurrentLocation = function () {
   getCurrentPos()
   .then(res => {
     const { latitude: lat, longitude: lng } = res.coords;
@@ -254,3 +257,28 @@ const checkCurrentLocation = function () {
 
 //////////////////////
 // Async await
+// displayCountries('nigeria');
+
+const whereAmI = async function () {
+  // Getting the latitude and longitude form the geolocation api
+  const pos = await getCurrentPos();
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  // awaiting the api
+  const res = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+  const data = await res.json();
+
+  const countryDetails = await fetch(
+    `https://restcountries.com/v2/name/${data.country}`
+  );
+  const data2 = await countryDetails.json();
+  displayCountries(data2[0]);
+
+  const neighbourhood = await fetch(
+    `https://restcountries.com/v2/alpha/${data2[0].borders[0]}`
+  );
+  const neighbor = await neighbourhood.json();
+  displayCountries(neighbor, 'neighbour');
+};
+
+whereAmI();
