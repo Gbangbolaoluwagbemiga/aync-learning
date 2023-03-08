@@ -257,28 +257,46 @@ const getCurrentPos = function () {
 
 //////////////////////
 // Async await
-// displayCountries('nigeria');
-
 const whereAmI = async function () {
-  // Getting the latitude and longitude form the geolocation api
-  const pos = await getCurrentPos();
-  const { latitude: lat, longitude: lng } = pos.coords;
+  try {
+    // Getting the latitude and longitude form the geolocation api
+    const pos = await getCurrentPos();
+    const { latitude: lat, longitude: lng } = pos.coords;
 
-  // awaiting the api
-  const res = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
-  const data = await res.json();
+    // awaiting the geocoding api
+    const res = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if (!res.ok) throw new Error(`Unable to fetch data,Error ${res.status}`);
+    const data = await res.json();
 
-  const countryDetails = await fetch(
-    `https://restcountries.com/v2/name/${data.country}`
-  );
-  const data2 = await countryDetails.json();
-  displayCountries(data2[0]);
+    // Country api
+    const countryDetails = await fetch(
+      `https://restcountries.com/v2/name/${data.country}`
+    );
+    if (!countryDetails.ok)
+      throw new Error(
+        `Unable to get the location of your country,Error ${countryDetails.status}`
+      );
 
-  const neighbourhood = await fetch(
-    `https://restcountries.com/v2/alpha/${data2[0].borders[0]}`
-  );
-  const neighbor = await neighbourhood.json();
-  displayCountries(neighbor, 'neighbour');
+    const data2 = await countryDetails.json();
+    displayCountries(data2[0]);
+
+    // Neighborhood api
+    const neighbourhood = await fetch(
+      `https://restcountries.com/v2/alpha/${data2[0].borders[0]}`
+    );
+    if (!neighbourhood.ok)
+      throw new Error(
+        `your country has no neighbor,Error ${neighbourhood.status}`
+      );
+
+    const neighbor = await neighbourhood.json();
+    displayCountries(neighbor, 'neighbour');
+  } catch (err) {
+    console.error(err);
+    catchError(`${err.message}🎇`);
+  } finally {
+    countriesContainer.style.opacity = 1;
+  }
 };
 
 whereAmI();
