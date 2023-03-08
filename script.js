@@ -201,10 +201,10 @@ Promise.reject(new Error('i am not good')).then(y => console.log(y));
 */
 const getCurrentPos = function () {
   return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(
-      pos => console.log(pos),
-      err => console.log(err)
-    );
+    // navigator.geolocation.getCurrentPosition(
+    //   pos => console.log(pos),
+    //   err => console.log(err)
+    // );
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
@@ -296,11 +296,34 @@ const whereAmI = async function () {
   } catch (err) {
     console.error(err);
     catchError(`${err.message}🎇`);
+
+    // Reject promise returned from an async function
+    throw err;
   } finally {
     countriesContainer.style.opacity = 1;
   }
 };
 
 console.log(`1: will get location`);
-whereAmI();
-console.log(`finished getting location`);
+// The commented code below won't work.
+// const userDetails = whereAmI();
+// console.log(userDetails);
+
+/////////////////////
+// Bad practice, why combine the then method with the saync await
+// whereAmI()
+//   .then(city => console.log(`2: ${city}`))
+//   .catch(err => console.error(`2: ${err.message}🎇`))
+//   .finally(() => console.log(`3: finished getting location`));
+
+// This is a self calling function (IIFE)
+(async function () {
+  try {
+    const city = await whereAmI();
+    console.log(`2: ${city}`);
+  } catch (err) {
+    console.error(`2: ${err.message}🎇`);
+  } finally {
+    console.log(`3: finished getting location`);
+  }
+})();
