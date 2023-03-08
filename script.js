@@ -349,3 +349,11 @@ const getCountriesInfo = async function (c1, c2, c3) {
   }
 };
 getCountriesInfo('Nigeria', 'kenya', 'ghana');
+
+Promise.race([
+  Promise.resolve('Hi'),
+  // Promise.reject('leave'),
+  Promise.resolve('Hey'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
