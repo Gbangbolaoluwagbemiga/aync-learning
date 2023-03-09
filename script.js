@@ -351,19 +351,24 @@ const getCountriesInfo = async function (c1, c2, c3) {
 getCountriesInfo('Nigeria', 'kenya', 'ghana');
 
 function timing(sec) {
-  setTimeout(() => {
-    console.log('trying to understand'), sec * 1000;
+  return new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error(`Request took too long`));
+    }, sec * 1000);
   });
 }
+
+// Promise. Race
 Promise.race([
-  Promise.resolve('Hey'),
-  Promise.resolve('Hi'),
+  getJson(`https://restcountries.com/v2/name/Nigeria`),
+  timing(0.5),
+  // Promise.resolve('Hey'),
   // Promise.reject('leave'),
+  // Promise.resolve('Hi'),
 ])
   .then(res => console.log(res))
   .catch(err => console.error(err));
 
-// Promise. Race
 (async function () {
   const res = await Promise.race([
     getJson(`https://restcountries.com/v2/name/Nigeria`),
@@ -372,3 +377,23 @@ Promise.race([
   ]);
   console.log(res[0]);
 })();
+
+/*
+/////////////////////////////////////////////////////////////
+NOTE: 
+📌 promise.Allselected works in the same manner with all, 
+just that allselected won't reject even when there's a rejected promise,
+while promise.all will.
+
+📌 promise.race is synonymous to promise.any. but p.any ignores rejected promises,
+while p.race doesn't
+
+/////////////////////////////////////////////////////////////
+*/
+// Promise.allsettled, Promise.any
+Promise.all([
+  Promise.reject('error'),
+  Promise.resolve('success'),
+  Promise.reject('failure'),
+  Promise.resolve('completed'),
+]).then(res => console.log(res));
