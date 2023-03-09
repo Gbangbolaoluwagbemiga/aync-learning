@@ -342,18 +342,33 @@ const getCountriesInfo = async function (c1, c2, c3) {
       getJson(`https://restcountries.com/v2/name/${c3}`),
     ]);
     const individualData = data.map(d => d[0].capital);
-    const [_, hi] = individualData;
-    console.log(hi);
+    // const [_, hi] = individualData;
+    console.log(individualData);
   } catch (err) {
     console.error(err);
   }
 };
 getCountriesInfo('Nigeria', 'kenya', 'ghana');
 
+function timing(sec) {
+  setTimeout(() => {
+    console.log('trying to understand'), sec * 1000;
+  });
+}
 Promise.race([
+  Promise.resolve('Hey'),
   Promise.resolve('Hi'),
   // Promise.reject('leave'),
-  Promise.resolve('Hey'),
 ])
   .then(res => console.log(res))
   .catch(err => console.error(err));
+
+// Promise. Race
+(async function () {
+  const res = await Promise.race([
+    getJson(`https://restcountries.com/v2/name/Nigeria`),
+    getJson(`https://restcountries.com/v2/name/italy`),
+    getJson(`https://restcountries.com/v2/name/canada`),
+  ]);
+  console.log(res[0]);
+})();
