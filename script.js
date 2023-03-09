@@ -2,6 +2,7 @@
 
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
+const imgContainer = document.querySelector('.images');
 
 ///////////////////////////////////////
 
@@ -397,3 +398,21 @@ Promise.all([
   Promise.reject('failure'),
   Promise.resolve('completed'),
 ]).then(res => console.log(res));
+
+// coding challenge 2&3
+const createImage = function (imgPath) {
+  const img = document.createElement('img');
+  img.src = imgPath;
+  console.log(img);
+
+  img.addEventListener('load', function () {
+    console.log('hi');
+    imgContainer.append(img);
+  });
+
+  img.addEventListener('error', function () {
+    console.log(`Error`);
+  });
+};
+
+createImage('img/img-1.jpg');
