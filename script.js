@@ -429,9 +429,16 @@ const createImage = function (imgPath) {
 createImage('img/img-1.jpg')
   .then(img => {
     currentImg = img;
-    console.log(currentImg);
-    console.log(`i am done`);
-    // img.style.display = 'none';
     return promiserFunc(2);
   })
-  .then(() => (currentImg.style.display = 'none'));
+  .then(() => {
+    currentImg.style.display = 'none';
+    return createImage('img/img-2.jpg');
+  })
+  .then(img => {
+    currentImg = img;
+    return promiserFunc(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+  });
