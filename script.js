@@ -180,7 +180,7 @@ lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 ////////////////////////////////
 //Promsifying
 
-const promiserFunc = sec => {
+const promiserFunc = function(sec) {
   return new Promise(function (resolve) {
     setTimeout(resolve, sec * 1000);
   });
@@ -399,20 +399,39 @@ Promise.all([
   Promise.resolve('completed'),
 ]).then(res => console.log(res));
 
-// coding challenge 2&3
-const createImage = function (imgPath) {
-  const img = document.createElement('img');
-  img.src = imgPath;
-  console.log(img);
-
-  img.addEventListener('load', function () {
-    console.log('hi');
-    imgContainer.append(img);
-  });
-
-  img.addEventListener('error', function () {
-    console.log(`Error`);
+const promiserFunc = function (sec) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, sec * 1000);
   });
 };
 
-createImage('img/img-1.jpg');
+let currentImg;
+// coding challenge 2&3
+const createImage = function (imgPath) {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement('img');
+    img.src = imgPath;
+    console.log(img);
+
+    img.addEventListener('load', function () {
+      console.log(img);
+      imgContainer.append(img);
+      resolve(img);
+    });
+
+    img.addEventListener('error', function () {
+      console.log(`Error`);
+      reject(new Error(img));
+    });
+  });
+};
+
+createImage('img/img-1.jpg')
+  .then(img => {
+    currentImg = img;
+    console.log(currentImg);
+    console.log(`i am done`);
+    // img.style.display = 'none';
+    return promiserFunc(2);
+  })
+  .then(() => (currentImg.style.display = 'none'));
