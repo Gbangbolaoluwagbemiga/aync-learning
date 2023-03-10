@@ -407,6 +407,8 @@ const promiserFunc = function (sec) {
 
 let currentImg;
 // coding challenge 2&3
+
+// coding challenge 2
 const createImage = function (imgPath) {
   return new Promise((resolve, reject) => {
     const img = document.createElement('img');
@@ -442,3 +444,5 @@ createImage('img/img-1.jpg')
   .then(() => {
     currentImg.style.display = 'none';
   });
+
+//coding challenge 3
